@@ -8,6 +8,7 @@ interface FullscreenPlayerProps {
   currentTrack: Track | null
   isPlaying: boolean
   progress: number
+  currentTime: number
   isLooping: boolean
   coverImage: string | null
   onClose: () => void
@@ -18,10 +19,17 @@ interface FullscreenPlayerProps {
   onToggleLike: (trackId: number) => void
 }
 
+function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, "0")}`
+}
+
 export function FullscreenPlayer({
   currentTrack,
   isPlaying,
   progress,
+  currentTime,
   isLooping,
   coverImage,
   onClose,
@@ -32,15 +40,6 @@ export function FullscreenPlayer({
   onToggleLike,
 }: FullscreenPlayerProps) {
   if (!currentTrack) return null
-
-  const formatTime = (percentage: number, duration: string) => {
-    const [mins, secs] = duration.split(":").map(Number)
-    const totalSecs = mins * 60 + secs
-    const currentSecs = Math.floor((percentage / 100) * totalSecs)
-    const currentMins = Math.floor(currentSecs / 60)
-    const remainingSecs = currentSecs % 60
-    return `${currentMins}:${String(remainingSecs).padStart(2, "0")}`
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
@@ -153,7 +152,7 @@ export function FullscreenPlayer({
             />
           </div>
           <div className="mt-2 flex justify-between text-xs tabular-nums text-muted-foreground">
-            <span>{formatTime(progress, currentTrack.duration)}</span>
+            <span>{formatTime(currentTime)}</span>
             <span>{currentTrack.duration}</span>
           </div>
         </div>

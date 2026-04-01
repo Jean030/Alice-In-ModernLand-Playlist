@@ -15,6 +15,12 @@ export interface Track {
   isLiked: boolean
 }
 
+// Parse duration string to seconds (moved outside component for stable reference)
+function parseDuration(duration: string): number {
+  const [mins, secs] = duration.split(":").map(Number)
+  return mins * 60 + secs
+}
+
 const TRACKS: Track[] = [
   { id: 1, code: "M01", title: "Overture: Into the Rabbit Hole", duration: "4:32", isLiked: false },
   { id: 2, code: "M02", title: "Neon Wonderland", duration: "3:45", isLiked: false },
@@ -47,10 +53,15 @@ export default function PlaylistPage() {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playMode, setPlayMode] = useState<"sequence" | "shuffle" | "liked">("sequence")
-  const [progress, setProgress] = useState(0)
+  const [currentTime, setCurrentTime] = useState(0)
   const [isLooping, setIsLooping] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [coverImage, setCoverImage] = useState<string | null>(null)
+
+  // Calculate progress percentage
+  const progress = currentTrack 
+    ? (currentTime / parseDuration(currentTrack.duration)) * 100 
+    : 0
 
   const getPlayableTracks = useCallback(() => {
     if (playMode === "liked") {
@@ -60,9 +71,15 @@ export default function PlaylistPage() {
   }, [tracks, playMode])
 
   const playTrack = (track: Track) => {
+    // If clicking the same track, toggle play/pause
+    if (currentTrack?.id === track.id) {
+      setIsPlaying(!isPlaying)
+      return
+    }
+    // If clicking a different track, start playing it
     setCurrentTrack(track)
     setIsPlaying(true)
-    setProgress(0)
+    setCurrentTime(0)
   }
 
   const toggleLike = (trackId: number) => {
@@ -77,7 +94,7 @@ export default function PlaylistPage() {
 
     // If looping, restart the same track
     if (isLooping && currentTrack) {
-      setProgress(0)
+      setCurrentTime(0)
       return
     }
 
@@ -89,7 +106,7 @@ export default function PlaylistPage() {
       const nextIndex = (currentIndex + 1) % playable.length
       setCurrentTrack(playable[nextIndex])
     }
-    setProgress(0)
+    setCurrentTime(0)
   }, [currentTrack, playMode, getPlayableTracks, isLooping])
 
   const playPrevious = useCallback(() => {
@@ -99,7 +116,7 @@ export default function PlaylistPage() {
     const currentIndex = playable.findIndex((t) => t.id === currentTrack?.id)
     const prevIndex = currentIndex <= 0 ? playable.length - 1 : currentIndex - 1
     setCurrentTrack(playable[prevIndex])
-    setProgress(0)
+    setCurrentTime(0)
   }, [currentTrack, getPlayableTracks])
 
   const togglePlayPause = () => {
@@ -130,17 +147,21 @@ export default function PlaylistPage() {
     }
   }
 
+  // Real-time progress tracking (1 second = 1 second)
   useEffect(() => {
     if (isPlaying && currentTrack) {
+      const trackDuration = parseDuration(currentTrack.duration)
+      
       const interval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
+        setCurrentTime((prev) => {
+          if (prev >= trackDuration) {
             playNext()
             return 0
           }
-          return prev + 0.5
+          return prev + 1
         })
-      }, 100)
+      }, 1000) // Update every 1 second (real time)
+      
       return () => clearInterval(interval)
     }
   }, [isPlaying, currentTrack, playNext])
@@ -194,6 +215,7 @@ export default function PlaylistPage() {
         currentTrack={currentTrack}
         isPlaying={isPlaying}
         progress={progress}
+        currentTime={currentTime}
         isLooping={isLooping}
         coverImage={coverImage}
         onTogglePlayPause={togglePlayPause}
@@ -209,6 +231,7 @@ export default function PlaylistPage() {
           currentTrack={currentTrack}
           isPlaying={isPlaying}
           progress={progress}
+          currentTime={currentTime}
           isLooping={isLooping}
           coverImage={coverImage}
           onClose={() => setIsFullscreen(false)}

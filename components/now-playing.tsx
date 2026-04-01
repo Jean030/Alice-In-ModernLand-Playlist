@@ -8,6 +8,7 @@ interface NowPlayingProps {
   currentTrack: Track | null
   isPlaying: boolean
   progress: number
+  currentTime: number
   isLooping: boolean
   coverImage: string | null
   onTogglePlayPause: () => void
@@ -17,10 +18,17 @@ interface NowPlayingProps {
   onOpenFullscreen: () => void
 }
 
+function formatTime(seconds: number): string {
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, "0")}`
+}
+
 export function NowPlaying({
   currentTrack,
   isPlaying,
   progress,
+  currentTime,
   isLooping,
   coverImage,
   onTogglePlayPause,
@@ -39,7 +47,7 @@ export function NowPlaying({
         />
       </div>
 
-      <div className="flex items-center gap-2 px-3 py-2 sm:gap-4 sm:px-4 sm:py-3">
+      <div className="flex items-center gap-2 px-3 py-2 sm:gap-3 sm:px-4 sm:py-3">
         {/* Album Cover - Clickable for fullscreen */}
         <button
           onClick={onOpenFullscreen}
@@ -78,19 +86,19 @@ export function NowPlaying({
           )}
         </button>
 
-        {/* Track Info - Also clickable on mobile */}
+        {/* Track Info - Minimal width on mobile */}
         <button
           onClick={onOpenFullscreen}
           disabled={!currentTrack}
-          className="flex min-w-0 flex-1 flex-col items-start text-left"
+          className="flex min-w-0 flex-1 flex-col items-start text-left sm:flex-initial sm:w-40 md:w-52"
         >
           {currentTrack ? (
             <>
-              <p className="w-full truncate text-sm font-medium text-foreground sm:text-base">
+              <p className="w-full truncate text-sm font-medium text-foreground">
                 {currentTrack.title}
               </p>
               <p className="text-xs text-muted-foreground">
-                {currentTrack.code}
+                {formatTime(currentTime)} / {currentTrack.duration}
               </p>
             </>
           ) : (
@@ -98,12 +106,12 @@ export function NowPlaying({
           )}
         </button>
 
-        {/* Playback Controls - Compact on mobile */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Playback Controls - Centered */}
+        <div className="flex flex-1 items-center justify-center gap-1 sm:gap-2">
           <button
             onClick={onPrevious}
             disabled={!currentTrack}
-            className="hidden h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 sm:flex"
+            className="flex h-8 w-8 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 sm:h-9 sm:w-9"
           >
             <SkipBack className="h-4 w-4" />
           </button>
@@ -122,14 +130,11 @@ export function NowPlaying({
           <button
             onClick={onNext}
             disabled={!currentTrack}
-            className="hidden h-9 w-9 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 sm:flex"
+            className="flex h-8 w-8 items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40 sm:h-9 sm:w-9"
           >
             <SkipForward className="h-4 w-4" />
           </button>
-        </div>
 
-        {/* Right Side - Loop & Duration */}
-        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={onToggleLoop}
             disabled={!currentTrack}
@@ -148,9 +153,12 @@ export function NowPlaying({
               <Repeat className="h-4 w-4" />
             )}
           </button>
+        </div>
 
+        {/* Right Side - Duration (desktop only) */}
+        <div className="hidden items-center sm:flex sm:w-40 md:w-52 sm:justify-end">
           {currentTrack && (
-            <span className="hidden min-w-[40px] text-right tabular-nums text-xs text-muted-foreground sm:inline sm:text-sm">
+            <span className="tabular-nums text-sm text-muted-foreground">
               {currentTrack.duration}
             </span>
           )}

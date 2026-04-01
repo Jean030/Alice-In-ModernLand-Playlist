@@ -38,10 +38,9 @@ export function TrackList({
   return (
     <div className="space-y-0.5 sm:space-y-1">
       {/* Table Header - Hidden on mobile */}
-      <div className="mb-3 hidden grid-cols-[auto_1fr_auto_auto] items-center gap-4 border-b border-border/30 px-4 pb-3 text-xs uppercase tracking-wider text-muted-foreground sm:grid md:grid-cols-[auto_1fr_1fr_auto_auto]">
-        <span className="w-8 text-center">#</span>
+      <div className="mb-3 hidden grid-cols-[auto_1fr_auto_auto] items-center gap-4 border-b border-border/30 px-4 pb-3 text-xs uppercase tracking-wider text-muted-foreground sm:grid">
+        <span className="w-12 text-center">#</span>
         <span>Track</span>
-        <span className="hidden md:block">Code</span>
         <span className="w-16 text-right">Duration</span>
         <span className="w-10" />
       </div>
@@ -55,25 +54,25 @@ export function TrackList({
           <div
             key={track.id}
             className={cn(
-              "group flex items-center gap-3 px-3 py-2.5 transition-all duration-200 sm:grid sm:grid-cols-[auto_1fr_auto_auto] sm:gap-4 sm:px-4 sm:py-3 md:grid-cols-[auto_1fr_1fr_auto_auto]",
+              "group flex items-center gap-3 px-3 py-2.5 transition-all duration-200 sm:grid sm:grid-cols-[auto_1fr_auto_auto] sm:gap-4 sm:px-4 sm:py-3",
               isCurrentTrack
                 ? "bg-primary/10 border-l-2 border-l-primary"
                 : "hover:bg-card/50 border-l-2 border-l-transparent active:bg-card/70"
             )}
           >
-            {/* Track Number / Play Button */}
+            {/* Track Code / Play Button */}
             <button
               onClick={() => onPlayTrack(track)}
-              className="relative flex h-8 w-8 shrink-0 items-center justify-center"
+              className="relative flex h-8 w-12 shrink-0 items-center justify-center"
             >
               <span
                 className={cn(
-                  "tabular-nums text-sm transition-opacity",
+                  "font-mono text-sm transition-opacity",
                   isCurrentTrack ? "text-primary" : "text-muted-foreground",
                   "group-hover:opacity-0"
                 )}
               >
-                {String(index + 1).padStart(2, "0")}
+                {track.code}
               </span>
               <span className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
                 {isCurrentlyPlaying ? (
@@ -84,8 +83,11 @@ export function TrackList({
               </span>
             </button>
 
-            {/* Track Title - Expanded on mobile */}
-            <div className="min-w-0 flex-1">
+            {/* Track Title - Clickable to play/pause */}
+            <button
+              onClick={() => onPlayTrack(track)}
+              className="min-w-0 flex-1 text-left"
+            >
               <p
                 className={cn(
                   "truncate text-sm font-medium transition-colors sm:text-base",
@@ -94,12 +96,12 @@ export function TrackList({
               >
                 {track.title}
               </p>
-              {/* Show code on mobile below title */}
+              {/* Show duration on mobile below title */}
               <p className={cn(
                 "text-xs sm:hidden",
                 isCurrentTrack ? "text-primary/70" : "text-muted-foreground"
               )}>
-                {track.code} · {track.duration}
+                {track.duration}
               </p>
               {isCurrentlyPlaying && (
                 <div className="mt-1 flex items-center gap-0.5">
@@ -110,17 +112,7 @@ export function TrackList({
                   <span className="h-2 w-0.5 animate-pulse bg-primary" style={{ animationDelay: "600ms" }} />
                 </div>
               )}
-            </div>
-
-            {/* Track Code - Hidden on mobile */}
-            <span
-              className={cn(
-                "hidden font-mono text-sm md:block",
-                isCurrentTrack ? "text-primary/80" : "text-muted-foreground"
-              )}
-            >
-              {track.code}
-            </span>
+            </button>
 
             {/* Duration - Hidden on mobile (shown inline above) */}
             <span
