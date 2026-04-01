@@ -15,15 +15,15 @@ export function PlaybackControls({
   likedCount,
 }: PlaybackControlsProps) {
   const modes = [
-    { id: "sequence" as const, label: "Sequence", icon: ListOrdered },
-    { id: "shuffle" as const, label: "Shuffle", icon: Shuffle },
-    { id: "liked" as const, label: "Liked", icon: Heart, count: likedCount },
+    { id: "sequence" as const, label: "Sequence", shortLabel: "Seq", icon: ListOrdered },
+    { id: "shuffle" as const, label: "Shuffle", shortLabel: "Shuf", icon: Shuffle },
+    { id: "liked" as const, label: "Liked", shortLabel: "Liked", icon: Heart, count: likedCount },
   ]
 
   return (
-    <div className="mb-8 flex flex-wrap items-center gap-3">
-      <span className="mr-2 text-xs uppercase tracking-wider text-muted-foreground">
-        Play Mode
+    <div className="mb-6 flex flex-wrap items-center gap-2 sm:mb-8 sm:gap-3">
+      <span className="mr-1 text-[10px] uppercase tracking-wider text-muted-foreground sm:mr-2 sm:text-xs">
+        Mode
       </span>
       {modes.map((mode) => (
         <button
@@ -31,7 +31,7 @@ export function PlaybackControls({
           onClick={() => setPlayMode(mode.id)}
           disabled={mode.id === "liked" && likedCount === 0}
           className={cn(
-            "group flex items-center gap-2 border px-4 py-2 text-sm transition-all duration-300",
+            "group flex items-center gap-1.5 border px-2.5 py-1.5 text-xs transition-all duration-300 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm",
             playMode === mode.id
               ? "border-primary bg-primary/10 text-primary"
               : "border-border bg-transparent text-muted-foreground hover:border-primary/50 hover:text-foreground",
@@ -40,13 +40,16 @@ export function PlaybackControls({
         >
           <mode.icon
             className={cn(
-              "h-4 w-4 transition-transform group-hover:scale-110",
+              "h-3.5 w-3.5 transition-transform group-hover:scale-110 sm:h-4 sm:w-4",
               playMode === mode.id && mode.id === "liked" && "fill-primary"
             )}
           />
-          <span className="uppercase tracking-wider">{mode.label}</span>
+          <span className="uppercase tracking-wider">
+            <span className="sm:hidden">{mode.shortLabel}</span>
+            <span className="hidden sm:inline">{mode.label}</span>
+          </span>
           {mode.count !== undefined && (
-            <span className="ml-1 tabular-nums text-xs">({mode.count})</span>
+            <span className="ml-0.5 tabular-nums text-[10px] sm:ml-1 sm:text-xs">({mode.count})</span>
           )}
         </button>
       ))}
