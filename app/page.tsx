@@ -18,8 +18,15 @@ export interface Track {
 
 // Parse duration string to seconds (moved outside component for stable reference)
 function parseDuration(duration: string): number {
+  if (!duration || !duration.includes(":")) return 0 // 增加保护
   const [mins, secs] = duration.split(":").map(Number)
   return mins * 60 + secs
+}
+function formatTime(seconds: number): string {
+  if (isNaN(seconds)) return "0:00"
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, "0")}`
 }
 
 const TRACKS: Track[] = [
@@ -143,6 +150,23 @@ export default function PlaylistPage() {
       setCurrentTime(audioRef.current.currentTime)
     }
   }
+  const handleLoadedMetadata = () => {
+    const audio = audioRef.current
+    if (!audio || !currentTrack) return
+
+    const realDuration = formatTime(audio.duration)
+
+    // 关键：如果当前歌曲没有时长或时长不准，自动更新列表中的数据
+    if (currentTrack.duration !== realDuration) {
+      setTracks((prev) =>
+        prev.map((t) =>
+          t.id === currentTrack.id ? { ...t, duration: realDuration } : t
+        )
+      )
+      // 同时更新当前选中的歌曲信息
+      setCurrentTrack(prev => prev ? { ...prev, duration: realDuration } : null)
+    }
+  }
 
 
   // Handle image upload for cover
@@ -250,9 +274,10 @@ export default function PlaylistPage() {
       <audio
         ref={audioRef}
         src={currentTrack?.url}
-        onTimeUpdate={handleTimeUpdate} // 绑定时间更新
-        onEnded={playNext}            // 播完自动下一首
-        loop={isLooping}              // 是否循环
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={playNext}            
+        loop={isLooping}              
       />
     </div>
   )
