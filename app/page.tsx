@@ -23,8 +23,8 @@ function parseDuration(duration: string): number {
 }
 
 const TRACKS: Track[] = [
-  { id: 1, code: "M01", title: "序章", duration: "4:32", isLiked: false, url: "/Alice-music/序章.mp3" },
-  { id: 2, code: "M02", title: "猫的诗（咖啡店）", duration: "3:45", isLiked: false, url: "/Alice-music/猫的诗（咖啡店）.mp3" },
+  { id: 1, code: "M01", title: "序章", duration: "4:40", isLiked: false, url: "/Alice-music/序章.mp3" },
+  { id: 2, code: "M02", title: "猫的诗（咖啡店）", duration: "3:00", isLiked: false, url: "/Alice-music/猫的诗（咖啡店）.mp3" },
   { id: 3, code: "M03", title: "跳下兔子洞", duration: "3:18", isLiked: false, url: "/Alice-music/跳下兔子洞.mp3" },
   { id: 4, code: "M04", title: "小心地滑", duration: "4:07", isLiked: false, url: "/Alice-music/小心地滑.mp3" },
   { id: 5, code: "M05", title: "红玫瑰", duration: "2:56", isLiked: false, url: "/Alice-music/红玫瑰.mp3" },
@@ -46,8 +46,8 @@ const TRACKS: Track[] = [
   { id: 21, code: "M21", title: "这不对", duration: "4:28", isLiked: false, url: "/Alice-music/这不对" },
   { id: 22, code: "M22", title: "红玫瑰（Reprise）", duration: "3:06", isLiked: false, url: "/Alice-music/红玫瑰（Variant）" },
   { id: 23, code: "M23", title: "告别", duration: "3:52", isLiked: false, url: "/Alice-music/告别.mp3" },
-  { id: 24, code: "M24", title: "尾声 Finale", duration: "", isLiked: false , url: "/Alice-music/尾声.mp3"},
-  { id: 25, code: "M24", title: "返场", duration: "", isLiked: false, url: "/Alice-music/返场.mp3" },
+  { id: 24, code: "M24", title: "尾声 Finale", duration: "3:52", isLiked: false , url: "/Alice-music/尾声.mp3"},
+  { id: 25, code: "M24", title: "返场", duration: "3:52", isLiked: false, url: "/Alice-music/返场.mp3" },
 ]
 
 export default function PlaylistPage() {
@@ -158,14 +158,14 @@ export default function PlaylistPage() {
   }
 
   // Real-time progress tracking (1 second = 1 second)
- useEffect() => {
+ useEffect(() => {
     const audio = audioRef.current
-    if (!audio) return
+    if (!audio || !currentTrack) return
 
     if (isPlaying) {
-      audio.play().catch(() => {
-        // 自动播放可能被浏览器拦截，静默处理
-        console.log("Playback interaction required")
+      // 真实播放：这不会导致页面跳转
+      audio.play().catch((err) => {
+        console.warn("播放被拦截，请先点击页面任意位置", err)
       })
     } else {
       audio.pause()
@@ -260,6 +260,13 @@ export default function PlaylistPage() {
           }}
         />
       )}
+      <audio
+        ref={audioRef}
+        src={currentTrack?.url}
+        onTimeUpdate={handleTimeUpdate} // 绑定时间更新
+        onEnded={playNext}            // 播完自动下一首
+        loop={isLooping}              // 是否循环
+      />
     </div>
   )
 }
