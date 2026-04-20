@@ -22,7 +22,7 @@ function parseDuration(duration: string): number {
 }
 
 const TRACKS: Track[] = [
-  { id: 1, code: "M01", title: "Overture: Into the Rabbit Hole", duration: "4:32", isLiked: false },
+  { id: 1, code: "M01", title: "序章", duration: "4:32", isLiked: false },
   { id: 2, code: "M02", title: "Neon Wonderland", duration: "3:45", isLiked: false },
   { id: 3, code: "M03", title: "The Queen's Gambit", duration: "3:18", isLiked: false },
   { id: 4, code: "M04", title: "Midnight Tea Party", duration: "4:07", isLiked: false },
