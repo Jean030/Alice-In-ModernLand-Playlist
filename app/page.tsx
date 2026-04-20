@@ -247,6 +247,7 @@ export default function PlaylistPage() {
           onToggleLoop={toggleLoop}
           onToggleLike={toggleLike}
         />
+      }
       <audio
         ref={audioRef}
         src={currentTrack?.url}
