@@ -45,7 +45,8 @@ const TRACKS: Track[] = [
   { id: 21, code: "M21", title: "这不对", duration: "4:28", isLiked: false },
   { id: 22, code: "M22", title: "红玫瑰（Reprise）", duration: "3:06", isLiked: false },
   { id: 23, code: "M23", title: "告别", duration: "3:52", isLiked: false },
-  { id: 24, code: "M24", title: "尾声 Finale", duration: "5:17", isLiked: false },
+  { id: 24, code: "M24", title: "尾声 Finale", duration: "", isLiked: false },
+  { id: 25, code: "M24", title: "尾声 Finale", duration: "", isLiked: false },
 ]
 
 export default function PlaylistPage() {
