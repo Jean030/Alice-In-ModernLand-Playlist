@@ -247,19 +247,6 @@ export default function PlaylistPage() {
           onToggleLoop={toggleLoop}
           onToggleLike={toggleLike}
         />
-      {/* 真正的音频播放器 */}
-      {currentTrack && (
-        <audio
-          autoPlay={isPlaying}
-          src={currentTrack.url}
-          ref={(audio) => {
-            if (audio) {
-              if (isPlaying) audio.play().catch(() => {});
-              else audio.pause();
-            }
-          }}
-        />
-      )}
       <audio
         ref={audioRef}
         src={currentTrack?.url}
