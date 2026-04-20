@@ -231,7 +231,6 @@ export default function PlaylistPage() {
         onOpenFullscreen={() => setIsFullscreen(true)}
       />
 
-      {/* Fullscreen Player */}
       {isFullscreen && (
         <FullscreenPlayer
           currentTrack={currentTrack}
@@ -247,7 +246,7 @@ export default function PlaylistPage() {
           onToggleLoop={toggleLoop}
           onToggleLike={toggleLike}
         />
-      }
+      )}
       <audio
         ref={audioRef}
         src={currentTrack?.url}
