@@ -17,6 +17,7 @@ interface FullscreenPlayerProps {
   onPrevious: () => void
   onToggleLoop: () => void
   onToggleLike: (trackId: number) => void
+  onSeek: (value: number) => void
 }
 
 function formatTime(seconds: number): string {
