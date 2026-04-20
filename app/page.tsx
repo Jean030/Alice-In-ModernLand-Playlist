@@ -146,10 +146,20 @@ export default function PlaylistPage() {
   }
   const handleTimeUpdate = () => {
     if (audioRef.current) {
-      // 这一步是把播放器真实的当前时间同步给你的 currentTime 状态
       setCurrentTime(audioRef.current.currentTime)
     }
   }
+ 
+  const handleSeek = (value: number) => {
+    if (audioRef.current && currentTrack) {
+      const totalDuration = audioRef.current.duration;
+      if (totalDuration) {
+        const newTime = (value / 100) * totalDuration;
+        audioRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+      }
+    }
+  };
   const handleLoadedMetadata = () => {
     const audio = audioRef.current
     if (!audio || !currentTrack) return
@@ -253,6 +263,7 @@ export default function PlaylistPage() {
         onPrevious={playPrevious}
         onToggleLoop={toggleLoop}
         onOpenFullscreen={() => setIsFullscreen(true)}
+        onseek={handleSeek}
       />
 
       {isFullscreen && (
@@ -269,6 +280,7 @@ export default function PlaylistPage() {
           onPrevious={playPrevious}
           onToggleLoop={toggleLoop}
           onToggleLike={toggleLike}
+          onseek={handleSeek}
         />
       )}
       <audio
