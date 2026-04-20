@@ -16,6 +16,7 @@ interface NowPlayingProps {
   onPrevious: () => void
   onToggleLoop: () => void
   onOpenFullscreen: () => void
+  onSeek: (value: number) => void
 }
 
 function formatTime(seconds: number): string {
@@ -39,13 +40,26 @@ export function NowPlaying({
 }: NowPlayingProps) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur-md safe-area-inset-bottom">
-      {/* Progress Bar */}
-      <div className="h-1 w-full bg-muted">
-        <div
-          className="h-full bg-primary transition-all duration-100"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+  
+<div className="group relative h-1.5 w-full bg-muted hover:h-2 transition-all cursor-pointer">
+  <input
+    type="range"
+    min="0"
+    max="100"
+    value={progress || 0}
+    onChange={(e) => onSeek(Number(e.target.value))}
+    className="absolute inset-0 z-10 w-full h-full opacity-0 cursor-pointer"
+  />
+  <div
+    className="absolute h-full bg-primary transition-all duration-100"
+    style={{ width: `${progress}%` }}
+  />
+  {/* 拖拽的小圆点 (可选) */}
+  <div 
+    className="absolute top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-white border-2 border-primary opacity-0 group-hover:opacity-100 transition-opacity"
+    style={{ left: `calc(${progress}% - 6px)` }}
+  />
+</div>
 
       <div className="flex items-center gap-2 px-3 py-2 sm:gap-3 sm:px-4 sm:py-3">
         {/* Album Cover - Clickable for fullscreen */}
