@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { PlaylistHeader } from "@/components/playlist-header"
 import { TrackList } from "@/components/track-list"
 import { NowPlaying } from "@/components/now-playing"
@@ -13,7 +13,7 @@ export interface Track {
   title: string
   duration: string
   isLiked: boolean
-  url: string; //
+  url: string; 
 }
 
 // Parse duration string to seconds (moved outside component for stable reference)
@@ -59,6 +59,7 @@ export default function PlaylistPage() {
   const [isLooping, setIsLooping] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [coverImage, setCoverImage] = useState<string | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // Calculate progress percentage
   const progress = currentTrack 
@@ -136,6 +137,13 @@ export default function PlaylistPage() {
   const toggleLoop = () => {
     setIsLooping(!isLooping)
   }
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      // 这一步是把播放器真实的当前时间同步给你的 currentTime 状态
+      setCurrentTime(audioRef.current.currentTime)
+    }
+  }
+
 
   // Handle image upload for cover
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,23 +158,19 @@ export default function PlaylistPage() {
   }
 
   // Real-time progress tracking (1 second = 1 second)
-  useEffect(() => {
-    if (isPlaying && currentTrack) {
-      const trackDuration = parseDuration(currentTrack.duration)
-      
-      const interval = setInterval(() => {
-        setCurrentTime((prev) => {
-          if (prev >= trackDuration) {
-            playNext()
-            return 0
-          }
-          return prev + 1
-        })
-      }, 1000) // Update every 1 second (real time)
-      
-      return () => clearInterval(interval)
+ useEffect() => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    if (isPlaying) {
+      audio.play().catch(() => {
+        // 自动播放可能被浏览器拦截，静默处理
+        console.log("Playback interaction required")
+      })
+    } else {
+      audio.pause()
     }
-  }, [isPlaying, currentTrack, playNext])
+  }, [isPlaying, currentTrack])
 
   // Prevent body scroll when fullscreen is open
   useEffect(() => {
