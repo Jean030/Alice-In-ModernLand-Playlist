@@ -1,39 +1,27 @@
 "use client"
 
-import { useRef } from "react"
-import { ImagePlus } from "lucide-react"
-
 interface PlaylistHeaderProps {
   likedCount: number
   totalTracks: number
   coverImage: string | null
-  onImageUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onCoverClick: () => void
 }
 
 export function PlaylistHeader({ 
   likedCount, 
   totalTracks, 
   coverImage,
-  onImageUpload 
+  onCoverClick
 }: PlaylistHeaderProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   return (
     <header className="mb-8 border-b border-border/50 pb-6 sm:mb-12 sm:pb-8">
       <div className="flex flex-col gap-4 sm:gap-6 md:flex-row md:items-end md:justify-between">
         {/* Album Cover + Title Section */}
         <div className="flex gap-4 sm:gap-6">
-          {/* Album Cover - Uploadable */}
+          {/* Album Cover - Click to fullscreen */}
           <div className="relative shrink-0">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={onImageUpload}
-              className="hidden"
-            />
             <button
-              onClick={() => fileInputRef.current?.click()}
+              onClick={onCoverClick}
               className="group relative flex h-24 w-24 items-center justify-center overflow-hidden border-2 border-primary/30 bg-card transition-all hover:border-primary sm:h-32 sm:w-32 md:h-40 md:w-40"
             >
               {coverImage ? (
@@ -43,15 +31,10 @@ export function PlaylistHeader({
                     alt="Album cover"
                     className="h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100">
-                    <ImagePlus className="h-6 w-6 text-white sm:h-8 sm:w-8" />
-                  </div>
+                  <div className="absolute inset-0 bg-black/30 opacity-0 transition-opacity group-hover:opacity-100" />
                 </>
               ) : (
-                <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground transition-colors group-hover:text-primary">
-                  <ImagePlus className="h-6 w-6 sm:h-8 sm:w-8" />
-                  <span className="text-[10px] uppercase tracking-wider sm:text-xs">Add Cover</span>
-                </div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground">No Cover</div>
               )}
             </button>
           </div>
@@ -67,8 +50,7 @@ export function PlaylistHeader({
               <span className="text-primary">Modernland</span>
             </h1>
             <p className="hidden max-w-md text-sm leading-relaxed text-muted-foreground sm:block">
-              A noir journey through the looking glass. {totalTracks} tracks of 
-              haunting melodies and modern rhythms.
+            多年以后，爱丽丝仍然会时不时想起这个怪梦。真的只是梦吗？ 噗抓马Pusical2026春演原创音乐剧《爱丽丝与冷酷仙境》{totalTracks} 首原创歌曲。
             </p>
           </div>
         </div>

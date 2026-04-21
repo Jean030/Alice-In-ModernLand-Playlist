@@ -10,7 +10,6 @@ interface NowPlayingProps {
   progress: number
   currentTime: number
   isLooping: boolean
-  coverImage: string | null
   onTogglePlayPause: () => void
   onNext: () => void
   onPrevious: () => void
@@ -31,12 +30,12 @@ export function NowPlaying({
   progress,
   currentTime,
   isLooping,
-  coverImage,
   onTogglePlayPause,
   onNext,
   onPrevious,
   onToggleLoop,
   onOpenFullscreen,
+  onSeek,
 }: NowPlayingProps) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 backdrop-blur-md safe-area-inset-bottom">
@@ -74,9 +73,9 @@ export function NowPlaying({
           )}
         >
           {currentTrack ? (
-            coverImage ? (
+            currentTrack.coverUrl ? (
               <img
-                src={coverImage}
+                src={currentTrack.coverUrl}
                 alt={currentTrack.title}
                 className="h-full w-full object-cover"
               />

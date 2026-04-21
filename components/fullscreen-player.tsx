@@ -10,7 +10,6 @@ interface FullscreenPlayerProps {
   progress: number
   currentTime: number
   isLooping: boolean
-  coverImage: string | null
   onClose: () => void
   onTogglePlayPause: () => void
   onNext: () => void
@@ -32,7 +31,6 @@ export function FullscreenPlayer({
   progress,
   currentTime,
   isLooping,
-  coverImage,
   onClose,
   onTogglePlayPause,
   onNext,
@@ -45,10 +43,10 @@ export function FullscreenPlayer({
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-background">
       {/* Background Image with Blur */}
-      {coverImage && (
+      {currentTrack.coverUrl && (
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-20 blur-3xl"
-          style={{ backgroundImage: `url(${coverImage})` }}
+          style={{ backgroundImage: `url(${currentTrack.coverUrl})` }}
         />
       )}
       
@@ -93,9 +91,9 @@ export function FullscreenPlayer({
                 isPlaying && "shadow-[0_0_60px_rgba(0,47,167,0.3)]"
               )}
             >
-              {coverImage ? (
+              {currentTrack.coverUrl ? (
                 <img
-                  src={coverImage}
+                  src={currentTrack.coverUrl}
                   alt={currentTrack.title}
                   className="h-full w-full object-cover"
                 />
