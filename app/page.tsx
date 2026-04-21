@@ -45,8 +45,8 @@ const TRACKS: Track[] = [
   { id: 13, code: "M13", title: "猫的诗（海边）", duration: "4:27", isLiked: false , url: "/Alice-music/猫的诗（海边）.mp3"},
   { id: 14, code: "M14", title: "反义词", duration: "4:22", isLiked: false , url: "/Alice-music/反义词.mp3"},
   { id: 15, code: "M15", title: "人生是槌球（Reprise）", duration: "3:09", isLiked: false , url: "/Alice-music/人生是槌球（Reprise）.mp3"},
-  { id: 16, code: "M16", title: "长大", duration: "0:00", isLiked: false , url: "/Alice-music/千万别.mp3"},
-  { id: 17, code: "M17", title: "猫的诗（森林）", duration: "0:00", isLiked: false , url: "/Alice-music/千万别.mp3"},
+  { id: 16, code: "M16", title: "长大", duration: "0:00", isLiked: false , url: "/Alice-music/长大.mp3"},
+  { id: 17, code: "M17", title: "猫的诗（森林）", duration: "0:00", isLiked: false , url: "/Alice-music/猫的诗（森林）.mp3"},
   { id: 18, code: "M18", title: "去何方", duration: "4:13", isLiked: false , url: "/Alice-music/去何方.mp3"},
   { id: 19, code: "M19", title: "千万别", duration: "4:45", isLiked: false , url: "/Alice-music/千万别.mp3"},
   { id: 20, code: "M20", title: "审判", duration: "3:16", isLiked: false , url: "/Alice-music/真审判.mp3"},
@@ -54,7 +54,7 @@ const TRACKS: Track[] = [
   { id: 22, code: "M22", title: "红玫瑰（Reprise）", duration: "0:53", isLiked: false, url: "/Alice-music/这不对.mp3" },
   { id: 23, code: "M23", title: "告别", duration: "4:31", isLiked: false, url: "/Alice-music/红玫瑰（Variant）.mp3" },
   { id: 24, code: "M24", title: "尾声 Finale", duration: "2:59", isLiked: false , url: "/Alice-music/尾声.mp3"},
-  { id: 25, code: "M25", title: "返场", duration: 3:22"", isLiked: false, url: "/Alice-music/返场.mp3" },
+  { id: 25, code: "M25", title: "返场", duration: "3:22", isLiked: false, url: "/Alice-music/返场.mp3" },
 ]
 
 export default function PlaylistPage() {
